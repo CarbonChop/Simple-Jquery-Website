@@ -1,0 +1,316 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Simple Jquery Site</title>
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
+  <style>
+    body {
+        font-family: Arial, sans-serif;
+        margin: 0;
+        padding: 0;
+    }
+
+    nav {
+        background: #333;
+        color: white;
+        display: flex;
+        padding: 10px;
+        justify-content: center;
+    }
+
+    nav a {
+        margin: 0 10px;
+        color: white;
+        text-decoration: none;
+        cursor: pointer;
+    }
+
+    .section {
+        display: none;
+        padding: 20px;
+    }
+
+    .section.active {
+      display: block;
+    }
+
+    h1 {
+        text-align: center;
+    }
+
+    #image-gallery {
+        display: grid;
+        grid-template-columns: repeat(3, 1fr);
+        gap: 10px;
+        padding: 20px;
+    }
+
+    #image-gallery img {
+        width: 100%;
+        cursor: pointer;
+        transition: transform 0.3s;
+    }
+
+    #image-gallery img:hover {
+        transform: scale(1.1);
+    }
+
+    #large-image {
+        display: none;
+        position: fixed;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+        z-index: 1000;
+    }
+
+    #large-image img {
+        max-width: 90%;
+        max-height: 90%;
+    }
+
+    #overlay {
+        display: none;
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background: rgba(0, 0, 0, 0.7);
+        z-index: 999;
+    }
+
+    form {
+        max-width: 400px;
+        margin: 20px auto;
+    }
+
+    form input, form textarea {
+        width: 100%;
+        margin-bottom: 10px;
+        padding: 10px;
+        border: 1px solid #ccc;
+        border-radius: 5px;
+    }
+
+    .error {
+      border-color: red;
+    }
+
+    .error-message {
+        display: block;
+        color: red;
+        font-size: 0.9em;
+        margin-bottom: 1rem;
+    }
+
+    .success-message {
+        color: green;
+        font-size: 1em;
+        margin-top: 10px;
+    }
+
+    #todo-list {
+        max-width: 400px;
+        margin: 20px auto;
+    }
+
+    #todo-list ul {
+        list-style: none;
+        padding: 0;
+    }
+
+    #todo-list li {
+        display: flex;
+        justify-content: space-between;
+        padding: 5px;
+        border: 1px solid #ccc;
+        border-radius: 5px;
+        margin-bottom: 5px;
+    }
+
+    #todo-list-heading {
+        text-align: center;
+    }
+
+    button {
+        padding: 10px 20px;
+        border: none;
+        background: blue;
+        color: white;
+        cursor: pointer;
+        border-radius: 5px;
+    }
+
+    button:hover {
+        background: green;
+    }
+
+    #hover-button {
+        margin-bottom: 2rem;
+    }
+
+    footer {
+        text-align: center;
+        padding: 10px;
+        background: #333;
+        color: white;
+        position: fixed;
+        width: 100%;
+        bottom: 0;
+    }
+  </style>
+</head>
+<body>
+
+<!-- Navigation Bar -->
+<nav role="navigation" aria-label="Main Navigation">
+    <a href="#" data-section="home" role="button" aria-controls="home">Home</a>
+    <a href="#" data-section="about" role="button" aria-controls="about">About</a>
+    <a href="#" data-section="contact" role="button" aria-controls="contact">Contact</a>
+</nav>
+
+<!-- Content Sections -->
+<div id="home" class="section active" role="region" aria-labelledby="home-heading">
+    <h1>
+        Welcome to the Home Section
+    </h1>
+    <p>Lorem ipsum odor amet, consectetuer adipiscing elit. Faucibus tincidunt volutpat ultricies tempus primis. Consequat elementum metus metus tempus semper aptent id maecenas dictumst. Accumsan molestie consectetur rutrum vulputate auctor. Purus curae sollicitudin sollicitudin quisque lacinia laoreet. Sit parturient nascetur amet fusce gravida vitae. Risus mi consequat et vitae natoque lobortis dolor. Pulvinar elit integer nam mus eleifend fringilla aliquet urna. Netus ligula ac ex tristique egestas suscipit enim. Torquent interdum maecenas montes fringilla habitant.</p>
+</div>
+<div id="about" class="section" role="region" aria-labelledby="about-heading">
+    <h1>
+        Learn more About Us 
+    </h1>
+    <p>Lorem ipsum odor amet, consectetuer adipiscing elit. Faucibus tincidunt volutpat ultricies tempus primis. Consequat elementum metus metus tempus semper aptent id maecenas dictumst. Accumsan molestie consectetur rutrum vulputate auctor. Purus curae sollicitudin sollicitudin quisque lacinia laoreet. Sit parturient nascetur amet fusce gravida vitae. Risus mi consequat et vitae natoque lobortis dolor. Pulvinar elit integer nam mus eleifend fringilla aliquet urna. Netus ligula ac ex tristique egestas suscipit enim. Torquent interdum maecenas montes fringilla habitant.</p>
+</div>
+<div id="contact" class="section" role="region" aria-labelledby="contact-heading">
+    <form id="contact-form" role="form" aria-labelledby="contact-heading">
+      <h1 id="contact-heading">Contact Us</h1>
+      <label for="name">Name: </label>
+      <input type="text" id="name" placeholder="Name" required>
+      <span class="error-message" aria-live="polite"></span>
+      <label for="email">Email: </label>
+      <input type="email" id="email" placeholder="Email" required>
+      <span class="error-message" aria-live="polite"></span>
+      <label for="message">Message: </label>
+      <textarea id="message" placeholder="Your Message" minlength="10" required></textarea>
+      <span class="error-message" aria-live="polite"></span>
+      <button type="submit">Submit</button>
+      <div class="success-message" aria-live="polite"></div>
+    </form>
+</div>
+
+<!-- Image Gallery -->
+<div id="image-gallery" role="list" aria-label="Image Gallery">
+    <img src="https://i.imgur.com/0LINzxs.jpeg" alt="Cats" role="listitem">
+    <img src="https://i.imgur.com/IHj06ve.jpeg" alt="Dog" role="listitem">
+    <img src="https://i.imgur.com/CUG0Aof.jpeg" alt="Burger" role="listitem">
+    <img src="https://usapple.org/wp-content/uploads/2019/10/apple-pink-lady.png" alt="Apple" role="listitem">
+    <img src="https://www.frommers.com/system/media_items/attachments/000/854/387/s980/from_top_of_the_rock__ryan_flicker.com.webp?1423068667" alt="City" role="listitem">
+    <img src="https://imageio.forbes.com/specials-images/imageserve/5d35eacaf1176b0008974b54/0x0.jpg?format=jpg&crop=4560,2565,x790,y784,safe&height=900&width=1600&fit=bounds" alt="Corvette" role="listitem">
+</div>
+<div id="overlay" role="dialog" aria-hidden="true" aria-labelledby="large-image-heading">
+    <div id="large-image">
+      <img src="" alt="Large View" id="large-image-heading">
+    </div>
+</div>
+
+<!-- To-Do List -->
+<div id="todo-list" role="region" aria-labelledby="todo-list-heading">
+    <h2 id="todo-list-heading">To-Do List</h2>
+    <label for="new-task">New Task</label>
+    <input type="text" id="new-task" aria-describedby="add-task">
+    <button id="add-task" aria-describedby="new-task">Add Task</button>
+    <ul role="list">
+        <!-- Tasks will dynamically appear here -->
+    </ul>
+</div>
+
+<!-- Interactive Button -->
+<div style="text-align: center; margin: 20px;">
+    <button id="hover-button" role="button" aria-label="Hover Button">Hover me!</button>
+</div>
+
+<!-- Footer -->
+<footer id="footer" role="contentinfo" aria-live="polite">
+    <!-- Dynamic date and time will appear here -->
+</footer>
+
+<script>
+$(document).ready(function() {
+// Navigation Bar
+$("nav a").click(function() {
+    $(".section").removeClass("active");
+    $("#" + $(this).data("section")).addClass("active");
+});
+
+// Image Gallery
+$("#image-gallery img").click(function() {
+    const src = $(this).attr("src");
+    $("#large-image img").attr("src", src);
+    $("#overlay, #large-image").fadeIn();
+});
+$("#overlay").click(function() {
+    $("#overlay, #large-image").fadeOut();
+});
+
+// Form Validation
+$("#contact-form").submit(function(e) {
+    e.preventDefault();
+    let isValid = true;
+    $(".error-message").text("");
+    $("#contact-form input, #contact-form textarea").removeClass("error");
+
+    if ($("#name").val().trim() === "") {
+        isValid = false;
+        $("#name").addClass("error").next(".error-message").text("Name is required.");
+    }
+    if (!/\S+@\S+\.\S+/.test($("#email").val())) {
+        isValid = false;
+        $("#email").addClass("error").next(".error-message").text("Invalid email.");
+    }
+    if ($("#message").val().trim().length < 10) {
+        isValid = false;
+        $("#message").addClass("error").next(".error-message").text("Message must be at least 10 characters.");
+    }
+    if (isValid) {
+        $(".success-message").text("Form submitted successfully!");
+    }
+});
+
+// To-Do List
+$("#add-task").click(function() {
+    const task = $("#new-task").val().trim();
+    if (task) {
+        const listItem = $("<li>").text(task);
+        const deleteButton = $("<button>").text("Delete").click(function() {
+            $(this).parent().remove();
+        });
+        listItem.append(deleteButton);
+        $("#todo-list ul").append(listItem);
+        $("#new-task").val("");
+    }
+});
+
+// Interactive Button
+$("#hover-button").hover(
+    function() {
+        $(this).css("background-color", "green");
+    },
+    function() {
+        $(this).css("background-color", "blue");
+    }
+);
+
+// Footer Dynamic Date and Time
+setInterval(function() {
+    const now = new Date();
+    $("#footer").text(now.toLocaleString());
+}, 1000);
+});
+</script>
+
+</body>
+</html>
